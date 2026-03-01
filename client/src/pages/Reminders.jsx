@@ -36,7 +36,22 @@ export default function Reminders() {
   const remove  = id => { deleteReminder(id); setReminders(r => r.filter(x => x._id!==id)); };
   const set = f => e => setForm({...form, [f]: e.target.value});
 
-  // ── Push Notification Request ───────────────────────────────────────────
+  // ── Smart Notification Helper (Mobile & Desktop) ────────────────────────
+  const triggerNotification = async (title, options) => {
+    // 1. Try mobile-friendly Service Worker method first
+    if ('serviceWorker' in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.ready;
+        await registration.showNotification(title, options);
+        return;
+      } catch (err) {
+        console.log('SW notification failed, trying fallback...');
+      }
+    }
+    // 2. Fallback for desktop browsers
+    new Notification(title, options);
+  };
+
   const enableNotifications = async () => {
     if (!('Notification' in window)) {
       alert('This browser does not support push notifications.');
@@ -46,19 +61,25 @@ export default function Reminders() {
     setPermission(perm);
     
     if (perm === 'granted') {
-      new Notification('HerCare Alerts Enabled 🌿', {
+      triggerNotification('HerCare Alerts Enabled 🌿', {
         body: 'You will now receive health reminders on this device.',
-        icon: '/icons/icon-192x192.png'
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/icon-72x72.png',
+        vibrate: [200, 100, 200] // Makes phones vibrate!
       });
+    } else {
+      alert('Permission denied. Please enable notifications in your browser settings.');
     }
   };
 
   // ── TEST NOTIFICATION BUTTON ────────────────────────────────────────────
   const testNotification = () => {
     if (Notification.permission === 'granted') {
-      new Notification('💧 Hydration Check!', {
+      triggerNotification('💧 Hydration Check!', {
         body: 'This is a test reminder. Time to drink a glass of water!',
-        icon: '/icons/icon-192x192.png'
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/icon-72x72.png',
+        vibrate: [200, 100, 200]
       });
     } else {
       alert('Notifications are not enabled yet. Please check your browser settings.');
@@ -76,7 +97,6 @@ export default function Reminders() {
           <h1 style={{ fontFamily:'Cormorant Garamond, serif', fontSize:44, fontWeight:600, color:'var(--ink)', letterSpacing:'-0.02em' }}>Reminders</h1>
         </div>
         <div style={{ display: 'flex', gap: 12 }}>
-          {/* NEW TEST BUTTON */}
           <button className="btn btn-outline" onClick={testNotification}>🔔 Test Alert</button>
           <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>+ New Reminder</button>
         </div>
