@@ -202,6 +202,33 @@ export default function Dashboard() {
         </div>
       </div>
 
+{/* ── Our Approach Card ── */}
+<motion.div 
+  initial={{ opacity: 0, x: 20 }} 
+  animate={{ opacity: 1, x: 0 }} 
+  transition={{ delay: 0.3 }}
+  className="card" 
+  style={{ padding: 26, borderTop: '4px solid var(--gold)', marginTop: 20 }}
+>
+  <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 20, fontWeight: 600, color: 'var(--ink)', marginBottom: 16 }}>
+    Holistic Wellness
+  </h3>
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div style={{ display: 'flex', gap: 12, alignItems: 'start' }}>
+      <span style={{ fontSize: 18 }}>🌱</span>
+      <p style={{ fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5, margin: 0 }}>
+        <strong>Bio-Individual Nutrition:</strong> Diet plans that shift with your hormones to reduce inflammation and stabilize energy.
+      </p>
+    </div>
+    <div style={{ display: 'flex', gap: 12, alignItems: 'start' }}>
+      <span style={{ fontSize: 18 }}>🧘</span>
+      <p style={{ fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5, margin: 0 }}>
+        <strong>Cycle-Syncing Exercise:</strong> Poses designed to support your body's strength during ovulation and rest during menstruation.
+      </p>
+    </div>
+  </div>
+</motion.div>
+
       {/* ── Quick access ─────────────────────────────────────────────────── */}
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
