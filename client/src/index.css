@@ -1,0 +1,613 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   HERCARE — DESIGN TOKENS
+   Readability Update v2:
+   - Darkened all "soft" ink values for WCAG AA compliance
+   - Increased font-weight on labels, eyebrows, body copy
+   - Sharpened border contrast
+   - Improved placeholder + disabled-state legibility
+   ============================================================ */
+
+:root {
+  /* Brand greens — unchanged */
+  --forest:       #1a2e1f;
+  --forest-mid:   #2d4a35;
+  --forest-light: #3d6647;
+  --sage:         #7a9e82;
+  --sage-light:   #b8d4bc;
+  --sage-pale:    #e8f0e9;
+
+  /* Gold — unchanged */
+  --gold:         #c9a84c;
+  --gold-light:   #e4c97e;
+  --gold-pale:    #faf5e8;
+
+  /* Surface — unchanged */
+  --cream:        #faf8f4;
+  --warm-white:   #ffffff;
+
+  /* ── TYPOGRAPHY (UPDATED) ──────────────────────────────────
+     Before → After  |  Reason
+     #1c1c1a → #111110  |  Pure near-black for headings (↑ contrast)
+     #4a4a46 → #2c2c28  |  Mid ink: was too grey, now charcoal
+     #7a7a72 → #4a4a44  |  Soft ink: was WCAG fail on white; now AA pass
+     #c4c4bc → #7a7a72  |  Faint ink: was near-invisible; now readable
+     ─────────────────────────────────────────────────────── */
+  --ink:          #111110;   /* was #1c1c1a — headings, primary text */
+  --ink-mid:      #2c2c28;   /* was #4a4a46 — body copy, table cells */
+  --ink-soft:     #4a4a44;   /* was #7a7a72 — secondary labels, sub-text */
+  --ink-faint:    #7a7a72;   /* was #c4c4bc — meta text, placeholders */
+
+  /* ── BORDERS (UPDATED) ─────────────────────────────────────
+     Slightly darkened for visibility without being heavy
+     ─────────────────────────────────────────────────────── */
+  --border:       #d4cfc5;   /* was #e2ddd4 — more visible dividers */
+  --border-dark:  #b8b0a4;   /* was #c8c0b4 — strong borders */
+}
+
+/* ── Reset ───────────────────────────────────────────────────── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+/* ── Body ────────────────────────────────────────────────────── */
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--cream);
+  color: var(--ink);        /* now #111110 — was #1c1c1a */
+  line-height: 1.7;         /* was 1.65 — slightly more breathing room */
+  font-size: 15px;          /* was implicit 14-16px depending on element */
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Headings ────────────────────────────────────────────────── */
+h1, h2, h3, h4 {
+  font-family: 'Cormorant Garamond', serif;
+  line-height: 1.15;
+  font-weight: 600;          /* was 400 — much bolder for hierarchy */
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+h1 { font-size: clamp(32px, 4vw, 48px); }
+h2 { font-size: clamp(22px, 3vw, 34px); }
+h3 { font-size: clamp(18px, 2.5vw, 24px); }
+h4 { font-size: clamp(15px, 2vw, 18px); }
+
+/* ── Card system ─────────────────────────────────────────────── */
+.card {
+  background: var(--warm-white);
+  border: 1px solid var(--border);   /* now #d4cfc5 — more visible */
+  border-radius: 4px;
+  box-shadow: 0 1px 12px rgba(26,46,31,0.05);
+}
+.card-elevated {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  box-shadow: 0 4px 32px rgba(26,46,31,0.09);
+}
+.card-forest {
+  background: var(--forest);
+  border-radius: 4px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Jost', sans-serif;
+  font-size: 13px;
+  font-weight: 600;            /* was 500 — bolder for legibility */
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: none; border-radius: 2px; cursor: pointer;
+  padding: 11px 24px; transition: all 0.2s ease;
+}
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.btn-primary {
+  background: var(--forest);
+  color: #f5f2ec;              /* slightly warm white for softer contrast */
+}
+.btn-primary:hover:not(:disabled) { background: var(--forest-mid); }
+
+.btn-gold {
+  background: var(--gold);
+  color: var(--forest);
+}
+.btn-gold:hover:not(:disabled) { background: var(--gold-light); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--forest);
+  border: 1.5px solid var(--forest);
+}
+.btn-outline:hover:not(:disabled) { background: var(--sage-pale); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-soft);      /* now #4a4a44 — was nearly invisible grey */
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--sage-pale);
+  color: var(--forest);
+  border-color: var(--sage);
+}
+
+.btn-danger {
+  background: #fef2f2;
+  color: #991b1b;              /* was #b91c1c — slightly darker red */
+  border: 1px solid #fca5a5;  /* was #fecaca — more visible border */
+  font-weight: 600;
+}
+.btn-danger:hover:not(:disabled) { background: #fee2e2; }
+
+/* ── Form fields ─────────────────────────────────────────────── */
+.field { display: flex; flex-direction: column; gap: 7px; }
+
+.label {
+  font-family: 'Jost', sans-serif;
+  font-size: 11.5px;           /* was 11px */
+  font-weight: 700;            /* was 600 — bolder labels */
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);      /* now #4a4a44 — was #7a7a72 (too light) */
+}
+
+.input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  font-family: 'Jost', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink);           /* now #111110 — sharp input text */
+  background: var(--warm-white);
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.input:focus {
+  border-color: var(--forest);
+  box-shadow: 0 0 0 3px rgba(26,46,31,0.08);
+}
+.input:disabled {
+  background: var(--cream);
+  color: var(--ink-soft);      /* was --ink-faint (#c4c4bc) — unreadable */
+  cursor: not-allowed;
+}
+.input::placeholder {
+  color: var(--ink-faint);     /* now #7a7a72 — was #c4c4bc (nearly invisible) */
+  font-weight: 400;
+}
+
+/* Select arrow legibility */
+select.input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a4a44' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+/* ── Badges ──────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px; border-radius: 2px;
+  font-size: 11px;
+  font-weight: 700;            /* was 600 */
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.badge-forest { background: var(--sage-pale); color: #1a3d22; }   /* was --forest-mid */
+.badge-gold   { background: var(--gold-pale); color: #6b4d0a; }   /* was #8a6a1a — darker */
+.badge-sage   { background: var(--sage-pale); color: #2d5436; }   /* was --sage — much darker */
+.badge-red    { background: #fef2f2;          color: #991b1b; }   /* was #b91c1c */
+
+/* ── Typography helpers ──────────────────────────────────────── */
+.eyebrow {
+  font-family: 'Jost', sans-serif;
+  font-size: 11.5px;           /* was 11px */
+  font-weight: 700;            /* was 600 */
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+.display  { font-family: 'Cormorant Garamond', serif; }
+.gold-text   { color: #a07d28; }   /* was --gold (#c9a84c) — too light on white */
+.forest-text { color: var(--forest); }
+.soft-text   { color: var(--ink-soft); }  /* now #4a4a44 — was #7a7a72 */
+
+/* ── Body copy helpers ───────────────────────────────────────── */
+/* Use these on <p> tags inside cards for optimal legibility */
+.body-copy {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink-mid);       /* #2c2c28 — dark charcoal */
+  line-height: 1.75;
+}
+.meta-copy {
+  font-size: 12px;
+  font-weight: 500;            /* slightly bolder than before */
+  color: var(--ink-soft);      /* #4a4a44 */
+  line-height: 1.6;
+}
+
+/* ── Layout helpers ──────────────────────────────────────────── */
+.page-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.page-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.page-grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+.stack { display: flex; flex-direction: column; }
+
+/* ── Divider ─────────────────────────────────────────────────── */
+.divider      { border: none; border-top: 1px solid var(--border); }
+.divider-gold { border: none; border-top: 1px solid var(--gold-light); }
+
+/* ── Page animation ──────────────────────────────────────────── */
+.page-enter { animation: rise 0.45s cubic-bezier(0.22,1,0.36,1) both; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Sidebar nav ─────────────────────────────────────────────── */
+.nav-link {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px; border-radius: 3px;
+  text-decoration: none;
+  font-family: 'Jost', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.55);  /* was 0.42 — more visible inactive links */
+  transition: all 0.16s ease;
+  border-left: 2px solid transparent;
+}
+.nav-link:hover {
+  color: rgba(255,255,255,0.88); /* was 0.78 */
+  background: rgba(255,255,255,0.06);
+}
+.nav-link.active {
+  color: var(--gold-light);
+  background: rgba(201,168,76,0.14);
+  border-left-color: var(--gold);
+  font-weight: 600;               /* was 500 — active link stands out */
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--sage-light); border-radius: 10px; }
+
+/* ── Table ───────────────────────────────────────────────────── */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th {
+  text-align: left; padding: 10px 16px;
+  font-size: 11px; font-weight: 700;  /* was 600 */
+  letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--ink-soft);             /* now #4a4a44 — was #7a7a72 */
+  border-bottom: 1.5px solid var(--border); /* was 1px — more defined */
+  background: var(--cream);           /* subtle header bg for separation */
+}
+.data-table td {
+  padding: 13px 16px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink-mid);              /* now #2c2c28 — was #4a4a46 */
+  border-bottom: 1px solid var(--border);
+  line-height: 1.5;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--sage-pale); }
+
+/* First column emphasis */
+.data-table td:first-child {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* ── Progress bar ────────────────────────────────────────────── */
+.progress-track {
+  height: 6px; background: var(--sage-pale);
+  border-radius: 100px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; border-radius: 100px;
+  background: linear-gradient(90deg, var(--forest), var(--sage));
+  transition: width 1.2s cubic-bezier(0.22,1,0.36,1);
+}
+
+/* ── Alert / Banner ──────────────────────────────────────────── */
+.alert-gold {
+  background: var(--gold-pale);
+  border: 1px solid #d4b060;     /* was --gold-light — slightly darker border */
+  border-radius: 3px;
+  padding: 14px 18px;
+  font-size: 13.5px;             /* was 13px */
+  font-weight: 500;              /* was implicit 400 */
+  color: #5a3e08;                /* was #6a4e14 — darker, higher contrast */
+  line-height: 1.65;
+}
+.alert-red {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 3px; padding: 14px 18px;
+  font-size: 13.5px; font-weight: 500;
+  color: #7f1d1d;                /* was #991b1b — even darker */
+  line-height: 1.65;
+}
+.alert-green {
+  background: #f0fdf4;
+  border: 1px solid #86efac;    /* was #bbf7d0 — more visible */
+  border-radius: 3px; padding: 14px 18px;
+  font-size: 13.5px; font-weight: 500;
+  color: #14532d;
+  line-height: 1.65;
+}
+
+/* ── Milestone / Timeline ────────────────────────────────────── */
+.timeline-line {
+  position: absolute; left: 15px; top: 0; bottom: 0;
+  width: 1px; background: var(--border);
+}
+
+/* ── Stat value display ──────────────────────────────────────── */
+/* Applied to the large number in stat cards */
+.stat-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);    /* #4a4a44 */
+}
+.stat-sub {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  font-weight: 400;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+/* ── Section sub-text ────────────────────────────────────────── */
+/* For the key:value rows inside cards */
+.detail-key {
+  font-size: 12.5px;
+  font-weight: 600;          /* was implicit 500 */
+  color: var(--ink-soft);    /* #4a4a44 */
+  letter-spacing: 0.03em;
+  text-transform: none;
+}
+.detail-value {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);         /* #111110 */
+  text-align: right;
+}
+
+/* ── Phase indicator strip ───────────────────────────────────── */
+/* Used in Dashboard header — ensure text is legible on tinted bg */
+.phase-strip {
+  padding: 14px 22px;
+  border-radius: 3px;
+}
+.phase-strip .phase-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.phase-strip .phase-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+.phase-strip .phase-note {
+  font-size: 12.5px;
+  color: var(--ink-soft);    /* #4a4a44 */
+  max-width: 260px;
+  line-height: 1.55;
+}
+
+/* ── Empty state ─────────────────────────────────────────────── */
+.empty-state-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.empty-state-text {
+  color: var(--ink-soft);    /* #4a4a44 — was much lighter */
+  font-size: 14.5px;
+  line-height: 1.75;
+  max-width: 420px;
+  margin: 0 auto 28px;
+}
+
+/* ── Form note / hint text ───────────────────────────────────── */
+.field-hint {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-soft);    /* #4a4a44 */
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+/* ── Top bar header text ─────────────────────────────────────── */
+/* The "Secure & Private" strip at the top of each page */
+.topbar-label {
+  font-size: 11px;
+  font-weight: 700;          /* was 600 */
+  color: var(--ink-soft);    /* #4a4a44 — was near-invisible */
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Footer text ─────────────────────────────────────────────── */
+footer span {
+  color: var(--ink-faint);   /* #7a7a72 — was #c4c4bc (near invisible) */
+}
+
+/* ── Accessibility: Focus visible ────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .page-grid-4 { grid-template-columns: repeat(2,1fr); }
+  .page-grid-3 { grid-template-columns: repeat(2,1fr); }
+  .page-grid-2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .page-grid-4,
+  .page-grid-3,
+  .page-grid-2 { grid-template-columns: 1fr; }
+}
+
+/* ── Stat value display ──────────────────────────────────────── */
+/* Applied to the large number in stat cards */
+.stat-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);    /* #4a4a44 */
+}
+.stat-sub {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  font-weight: 400;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+/* ── Section sub-text ────────────────────────────────────────── */
+/* For the key:value rows inside cards */
+.detail-key {
+  font-size: 12.5px;
+  font-weight: 600;          /* was implicit 500 */
+  color: var(--ink-soft);    /* #4a4a44 */
+  letter-spacing: 0.03em;
+  text-transform: none;
+}
+.detail-value {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);         /* #111110 */
+  text-align: right;
+}
+
+/* ── Phase indicator strip ───────────────────────────────────── */
+/* Used in Dashboard header — ensure text is legible on tinted bg */
+.phase-strip {
+  padding: 14px 22px;
+  border-radius: 3px;
+}
+.phase-strip .phase-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.phase-strip .phase-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+.phase-strip .phase-note {
+  font-size: 12.5px;
+  color: var(--ink-soft);    /* #4a4a44 */
+  max-width: 260px;
+  line-height: 1.55;
+}
+
+/* ── Empty state ─────────────────────────────────────────────── */
+.empty-state-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.empty-state-text {
+  color: var(--ink-soft);    /* #4a4a44 — was much lighter */
+  font-size: 14.5px;
+  line-height: 1.75;
+  max-width: 420px;
+  margin: 0 auto 28px;
+}
+
+/* ── Form note / hint text ───────────────────────────────────── */
+.field-hint {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-soft);    /* #4a4a44 */
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+/* ── Top bar header text ─────────────────────────────────────── */
+/* The "Secure & Private" strip at the top of each page */
+.topbar-label {
+  font-size: 11px;
+  font-weight: 700;          /* was 600 */
+  color: var(--ink-soft);    /* #4a4a44 — was near-invisible */
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Footer text ─────────────────────────────────────────────── */
+footer span {
+  color: var(--ink-faint);   /* #7a7a72 — was #c4c4bc (near invisible) */
+}
+
+/* ── Accessibility: Focus visible ────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .page-grid-4 { grid-template-columns: repeat(2,1fr); }
+  .page-grid-3 { grid-template-columns: repeat(2,1fr); }
+  .page-grid-2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .page-grid-4,
+  .page-grid-3,
+  .page-grid-2 { grid-template-columns: 1fr; }
+}
