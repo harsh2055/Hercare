@@ -46,11 +46,22 @@ export default function Reminders() {
     setPermission(perm);
     
     if (perm === 'granted') {
-      // Create a test notification instantly to prove it works!
       new Notification('HerCare Alerts Enabled 🌿', {
         body: 'You will now receive health reminders on this device.',
         icon: '/icons/icon-192x192.png'
       });
+    }
+  };
+
+  // ── TEST NOTIFICATION BUTTON ────────────────────────────────────────────
+  const testNotification = () => {
+    if (Notification.permission === 'granted') {
+      new Notification('💧 Hydration Check!', {
+        body: 'This is a test reminder. Time to drink a glass of water!',
+        icon: '/icons/icon-192x192.png'
+      });
+    } else {
+      alert('Notifications are not enabled yet. Please check your browser settings.');
     }
   };
 
@@ -64,7 +75,11 @@ export default function Reminders() {
           <p className="eyebrow" style={{ marginBottom:8 }}>Health Alerts</p>
           <h1 style={{ fontFamily:'Cormorant Garamond, serif', fontSize:44, fontWeight:600, color:'var(--ink)', letterSpacing:'-0.02em' }}>Reminders</h1>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>+ New Reminder</button>
+        <div style={{ display: 'flex', gap: 12 }}>
+          {/* NEW TEST BUTTON */}
+          <button className="btn btn-outline" onClick={testNotification}>🔔 Test Alert</button>
+          <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>+ New Reminder</button>
+        </div>
       </div>
 
       {/* ── Notification Banner ── */}
