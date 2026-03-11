@@ -1,15 +1,13 @@
 // client/src/App.jsx
-// CHANGES from Step 3 version:
-//   1. Import SOSButton
-//   2. Mount <SOSButton /> in Shell alongside <ChatBot />
-//   Both float globally over all authenticated pages.
+// REDESIGNED: Mobile-first Shell layout with proper z-index hierarchy,
+//             responsive main content area, and bottom nav padding on mobile.
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import Navigation from './components/Navigation';
-import ChatBot from './components/ChatBot';         // Step 3
-import SOSButton from './components/SOSButton';     // Step 6 ← NEW
+import ChatBot from './components/ChatBot';
+import SOSButton from './components/SOSButton';
 import Dashboard from './pages/Dashboard';
 import CycleTracking from './pages/CycleTracking';
 import Pregnancy from './pages/Pregnancy';
@@ -36,54 +34,137 @@ const Guard = ({ children }) => {
   return user ? children : <Navigate to="/login" replace />;
 };
 
-// ── Shell: wraps all authenticated pages ──────────────────────────────────────
-// Both ChatBot and SOSButton are mounted here once — they persist across
-// navigation without re-mounting (chat history and SOS state are preserved).
+// ── Shell ─────────────────────────────────────────────────────────────────────
+// Z-index hierarchy (highest wins):
+//   SOS Modal backdrop    z: 10000
+//   SOS Modal content     z: 10001
+//   Mobile nav overlay    z: 150
+//   Mobile sidebar        z: 160
+//   Bottom nav            z: 100
+//   Sidebar (desktop)     z: 100
+//   Top bar (mobile)      z: 200
+//   Sticky header         z: 50
+//   ChatBot panel         z: 1000  (defined inside ChatBot.jsx)
+//   ChatBot button        z: 1000
+//   SOS button (closed)   z: 999
 //
-// Layout of floating elements:
-//   Bottom-left  → SOS Button  (z-index: 999)
-//   Bottom-right → Chat Button (z-index: 1000)
-//   They never overlap.
+// Note: When SOS modal is open it renders at z: 10000+ so it covers everything.
 const Shell = ({ children }) => (
-  <div style={{ display: 'flex', minHeight: '100vh' }}>
-    <Navigation />
-    <div style={{ marginLeft: 220, flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--cream)' }}>
+  <>
+    <style>{`
+      /* ── Shell layout ───────────────────────────────── */
+      .shell-wrapper {
+        display: flex;
+        min-height: 100vh;
+      }
 
-      {/* Top bar */}
-      <header style={{
-        height: 56, background: 'var(--warm-white)', borderBottom: '1px solid var(--border)',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 40px', position: 'sticky', top: 0, zIndex: 50,
-        boxShadow: '0 1px 0 var(--border)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--sage)' }} />
-          <span className="topbar-label">Secure &amp; Private Health Platform</span>
-        </div>
-        <div style={{ fontSize: 15, color: 'var(--gold)', fontStyle: 'italic', fontFamily: 'Cormorant Garamond, serif' }}>
-          ⚕ Not a substitute for medical advice
-        </div>
-      </header>
+      .shell-content {
+        margin-left: 220px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background: var(--cream);
+        transition: margin-left 0.3s ease;
+      }
 
-      {/* Page content */}
-      <main style={{ flex: 1, padding: '44px 48px', maxWidth: 1160, width: '100%', margin: '0 auto' }} className="page-enter">
-        {children}
-      </main>
+      .shell-topbar {
+        height: 56px;
+        background: var(--warm-white);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        box-shadow: 0 1px 0 var(--border);
+      }
 
-      {/* Footer */}
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '20px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 16, color: 'var(--ink-faint)' }}>HerCare</span>
-        <span style={{ fontSize: 12, color: 'var(--ink-faint)' }}>© 2025 · All health data is private and encrypted</span>
-      </footer>
+      .shell-main {
+        flex: 1;
+        padding: 44px 48px;
+        max-width: 1160px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .shell-footer {
+        border-top: 1px solid var(--border);
+        padding: 20px 48px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      /* ── Tablet (481px – 768px) ─────────────────────── */
+      @media (max-width: 768px) {
+        .shell-content {
+          margin-left: 0;
+          padding-top: 56px; /* account for mobile top bar */
+          padding-bottom: 64px; /* account for bottom nav */
+        }
+
+        .shell-topbar {
+          display: none; /* hidden on mobile — mobile-topbar replaces it */
+        }
+
+        .shell-main {
+          padding: 24px 16px;
+        }
+
+        .shell-footer {
+          padding: 16px;
+          flex-direction: column;
+          gap: 6px;
+          text-align: center;
+        }
+      }
+
+      /* ── Mobile (320px – 480px) ─────────────────────── */
+      @media (max-width: 480px) {
+        .shell-main {
+          padding: 20px 12px;
+        }
+      }
+    `}</style>
+
+    <div className="shell-wrapper">
+      <Navigation />
+
+      <div className="shell-content">
+        {/* Top bar (desktop only) */}
+        <header className="shell-topbar">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--sage)' }} />
+            <span className="topbar-label">Secure &amp; Private Health Platform</span>
+          </div>
+          <div style={{ fontSize: 15, color: 'var(--gold)', fontStyle: 'italic', fontFamily: 'Cormorant Garamond, serif' }}>
+            ⚕ Not a substitute for medical advice
+          </div>
+        </header>
+
+        {/* Page content */}
+        <main className="shell-main page-enter">
+          {children}
+        </main>
+
+        {/* Footer */}
+        <footer className="shell-footer">
+          <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 16, color: 'var(--ink-faint)' }}>HerCare</span>
+          <span style={{ fontSize: 12, color: 'var(--ink-faint)' }}>© 2025 · All health data is private and encrypted</span>
+        </footer>
+      </div>
+
+      {/* ── Floating global elements ──────────────────────────────────────── */}
+      {/* SOS: bottom-left (z-index 999 normally, z-index 10000+ when modal open) */}
+      <SOSButton />
+
+      {/* Chat: bottom-right (z-index 1000, defined inside ChatBot) */}
+      <ChatBot />
     </div>
-
-    {/* ── Floating global elements ─────────────────────────────────────── */}
-    {/* SOS: bottom-left  (z-index 999) */}
-    <SOSButton />
-
-    {/* Chat: bottom-right (z-index 1000, defined inside ChatBot) */}
-    <ChatBot />
-  </div>
+  </>
 );
 
 const AppRoutes = () => {

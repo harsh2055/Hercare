@@ -1,613 +1,815 @@
+/* =============================================================================
+   HerCare — index.css
+   Mobile-first design system. Breakpoints:
+     Mobile:  320px – 480px
+     Tablet:  481px – 768px
+     Desktop: 769px+
+   ============================================================================= */
+
+/* ── Google Fonts ─────────────────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* ============================================================
-   HERCARE — DESIGN TOKENS
-   Readability Update v2:
-   - Darkened all "soft" ink values for WCAG AA compliance
-   - Increased font-weight on labels, eyebrows, body copy
-   - Sharpened border contrast
-   - Improved placeholder + disabled-state legibility
-   ============================================================ */
-
-:root {
-  /* Brand greens — unchanged */
-  --forest:       #1a2e1f;
-  --forest-mid:   #2d4a35;
-  --forest-light: #3d6647;
-  --sage:         #7a9e82;
-  --sage-light:   #b8d4bc;
-  --sage-pale:    #e8f0e9;
-
-  /* Gold — unchanged */
-  --gold:         #c9a84c;
-  --gold-light:   #e4c97e;
-  --gold-pale:    #faf5e8;
-
-  /* Surface — unchanged */
-  --cream:        #faf8f4;
-  --warm-white:   #ffffff;
-
-  /* ── TYPOGRAPHY (UPDATED) ──────────────────────────────────
-     Before → After  |  Reason
-     #1c1c1a → #111110  |  Pure near-black for headings (↑ contrast)
-     #4a4a46 → #2c2c28  |  Mid ink: was too grey, now charcoal
-     #7a7a72 → #4a4a44  |  Soft ink: was WCAG fail on white; now AA pass
-     #c4c4bc → #7a7a72  |  Faint ink: was near-invisible; now readable
-     ─────────────────────────────────────────────────────── */
-  --ink:          #111110;   /* was #1c1c1a — headings, primary text */
-  --ink-mid:      #2c2c28;   /* was #4a4a46 — body copy, table cells */
-  --ink-soft:     #4a4a44;   /* was #7a7a72 — secondary labels, sub-text */
-  --ink-faint:    #7a7a72;   /* was #c4c4bc — meta text, placeholders */
-
-  /* ── BORDERS (UPDATED) ─────────────────────────────────────
-     Slightly darkened for visibility without being heavy
-     ─────────────────────────────────────────────────────── */
-  --border:       #d4cfc5;   /* was #e2ddd4 — more visible dividers */
-  --border-dark:  #b8b0a4;   /* was #c8c0b4 — strong borders */
+/* ── CSS Reset ───────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* ── Reset ───────────────────────────────────────────────────── */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+/* ── Design Tokens ───────────────────────────────────────────────────────── */
+:root {
+  /* Core palette */
+  --forest:        #1a2e1f;
+  --forest-mid:    #2d4a35;
+  --sage:          #7a9e82;
+  --sage-light:    #a8c5af;
+  --sage-pale:     #e8f0e9;
+  --gold:          #c9a84c;
+  --gold-light:    #e0c87a;
+  --gold-pale:     #faf5e8;
 
-/* ── Body ────────────────────────────────────────────────────── */
+  /* Neutrals */
+  --cream:         #faf8f4;
+  --warm-white:    #fefdfb;
+  --ink:           #111110;
+  --ink-mid:       #2c2c2a;
+  --ink-soft:      #5a5a54;
+  --ink-faint:     #9a9a92;
+  --border:        #e4e0d8;
+
+  /* Semantic */
+  --destructive:   #dc2626;
+  --success:       #16a34a;
+  --warning:       #ca8a04;
+
+  /* Spacing (8px grid) */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Typography */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Jost', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Radii */
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 4px rgba(26,46,31,0.06);
+  --shadow-md:  0 4px 16px rgba(26,46,31,0.08);
+  --shadow-lg:  0 8px 32px rgba(26,46,31,0.10);
+  --shadow-xl:  0 16px 56px rgba(26,46,31,0.14);
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: 'Jost', sans-serif;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
   background: var(--cream);
-  color: var(--ink);        /* now #111110 — was #1c1c1a */
-  line-height: 1.7;         /* was 1.65 — slightly more breathing room */
-  font-size: 15px;          /* was implicit 14-16px depending on element */
-  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Headings ────────────────────────────────────────────────── */
-h1, h2, h3, h4 {
-  font-family: 'Cormorant Garamond', serif;
-  line-height: 1.15;
-  font-weight: 600;          /* was 400 — much bolder for hierarchy */
-  letter-spacing: -0.01em;
-  color: var(--ink);
+a {
+  color: inherit;
 }
 
-h1 { font-size: clamp(32px, 4vw, 48px); }
-h2 { font-size: clamp(22px, 3vw, 34px); }
-h3 { font-size: clamp(18px, 2.5vw, 24px); }
-h4 { font-size: clamp(15px, 2vw, 18px); }
+button, input, select, textarea {
+  font-family: var(--font-body);
+}
 
-/* ── Card system ─────────────────────────────────────────────── */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ── Typography ──────────────────────────────────────────────────────────── */
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.topbar-label {
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+/* ── Card ────────────────────────────────────────────────────────────────── */
 .card {
   background: var(--warm-white);
-  border: 1px solid var(--border);   /* now #d4cfc5 — more visible */
-  border-radius: 4px;
-  box-shadow: 0 1px 12px rgba(26,46,31,0.05);
-}
-.card-elevated {
-  background: var(--warm-white);
   border: 1px solid var(--border);
-  border-radius: 4px;
-  box-shadow: 0 4px 32px rgba(26,46,31,0.09);
-}
-.card-forest {
-  background: var(--forest);
-  border-radius: 4px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-/* ── Buttons ─────────────────────────────────────────────────── */
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
 .btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: 'Jost', sans-serif;
-  font-size: 13px;
-  font-weight: 600;            /* was 500 — bolder for legibility */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: none; border-radius: 2px; cursor: pointer;
-  padding: 11px 24px; transition: all 0.2s ease;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+  white-space: nowrap;
+  /* Accessible tap target */
+  min-height: 44px;
+  min-width: 44px;
 }
-.btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .btn-primary {
   background: var(--forest);
-  color: #f5f2ec;              /* slightly warm white for softer contrast */
+  color: var(--cream);
 }
-.btn-primary:hover:not(:disabled) { background: var(--forest-mid); }
 
-.btn-gold {
-  background: var(--gold);
-  color: var(--forest);
+.btn-primary:hover {
+  background: var(--forest-mid);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(26,46,31,0.2);
 }
-.btn-gold:hover:not(:disabled) { background: var(--gold-light); }
-
-.btn-outline {
-  background: transparent;
-  color: var(--forest);
-  border: 1.5px solid var(--forest);
-}
-.btn-outline:hover:not(:disabled) { background: var(--sage-pale); }
 
 .btn-ghost {
   background: transparent;
-  color: var(--ink-soft);      /* now #4a4a44 — was nearly invisible grey */
-  border: 1px solid var(--border);
+  color: var(--ink-soft);
+  border: 1.5px solid var(--border);
 }
-.btn-ghost:hover:not(:disabled) {
-  background: var(--sage-pale);
+
+.btn-ghost:hover {
+  border-color: var(--forest);
   color: var(--forest);
-  border-color: var(--sage);
 }
 
-.btn-danger {
-  background: #fef2f2;
-  color: #991b1b;              /* was #b91c1c — slightly darker red */
-  border: 1px solid #fca5a5;  /* was #fecaca — more visible border */
-  font-weight: 600;
+/* ── Nav link (sidebar) ──────────────────────────────────────────────────── */
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: rgba(255,255,255,0.55);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+  letter-spacing: 0.01em;
+  min-height: 44px;
 }
-.btn-danger:hover:not(:disabled) { background: #fee2e2; }
 
-/* ── Form fields ─────────────────────────────────────────────── */
-.field { display: flex; flex-direction: column; gap: 7px; }
+.nav-link:hover {
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.85);
+}
+
+.nav-link.active {
+  background: rgba(201,168,76,0.15);
+  color: var(--cream);
+}
+
+/* ── Form elements ───────────────────────────────────────────────────────── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
 .label {
-  font-family: 'Jost', sans-serif;
-  font-size: 11.5px;           /* was 11px */
-  font-weight: 700;            /* was 600 — bolder labels */
-  letter-spacing: 0.1em;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--ink-soft);      /* now #4a4a44 — was #7a7a72 (too light) */
 }
 
 .input {
-  width: 100%;
-  padding: 11px 14px;
+  padding: 10px 14px;
   border: 1.5px solid var(--border);
-  border-radius: 3px;
-  font-family: 'Jost', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--ink);           /* now #111110 — sharp input text */
-  background: var(--warm-white);
-  outline: none;
-  transition: border-color 0.18s, box-shadow 0.18s;
-}
-.input:focus {
-  border-color: var(--forest);
-  box-shadow: 0 0 0 3px rgba(26,46,31,0.08);
-}
-.input:disabled {
+  border-radius: var(--radius-sm);
   background: var(--cream);
-  color: var(--ink-soft);      /* was --ink-faint (#c4c4bc) — unreadable */
-  cursor: not-allowed;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: border-color 0.15s;
+  width: 100%;
+  min-height: 44px;
 }
+
+.input:focus {
+  outline: none;
+  border-color: var(--forest);
+  background: var(--warm-white);
+}
+
 .input::placeholder {
-  color: var(--ink-faint);     /* now #7a7a72 — was #c4c4bc (nearly invisible) */
-  font-weight: 400;
+  color: var(--ink-faint);
 }
 
-/* Select arrow legibility */
-select.input {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a4a44' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 36px;
-}
-
-/* ── Badges ──────────────────────────────────────────────────── */
+/* ── Badges ──────────────────────────────────────────────────────────────── */
 .badge {
-  display: inline-flex; align-items: center;
-  padding: 3px 10px; border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 3px;
   font-size: 11px;
-  font-weight: 700;            /* was 600 */
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
 }
-.badge-forest { background: var(--sage-pale); color: #1a3d22; }   /* was --forest-mid */
-.badge-gold   { background: var(--gold-pale); color: #6b4d0a; }   /* was #8a6a1a — darker */
-.badge-sage   { background: var(--sage-pale); color: #2d5436; }   /* was --sage — much darker */
-.badge-red    { background: #fef2f2;          color: #991b1b; }   /* was #b91c1c */
 
-/* ── Typography helpers ──────────────────────────────────────── */
-.eyebrow {
-  font-family: 'Jost', sans-serif;
-  font-size: 11.5px;           /* was 11px */
-  font-weight: 700;            /* was 600 */
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+.badge-forest {
+  background: var(--sage-pale);
+  color: var(--forest);
+  border: 1px solid rgba(122,158,130,0.3);
+}
+
+.badge-sage {
+  background: var(--sage-pale);
   color: var(--sage);
 }
-.display  { font-family: 'Cormorant Garamond', serif; }
-.gold-text   { color: #a07d28; }   /* was --gold (#c9a84c) — too light on white */
-.forest-text { color: var(--forest); }
-.soft-text   { color: var(--ink-soft); }  /* now #4a4a44 — was #7a7a72 */
 
-/* ── Body copy helpers ───────────────────────────────────────── */
-/* Use these on <p> tags inside cards for optimal legibility */
-.body-copy {
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--ink-mid);       /* #2c2c28 — dark charcoal */
-  line-height: 1.75;
+.badge-gold {
+  background: var(--gold-pale);
+  color: #8a6a1a;
+  border: 1px solid rgba(201,168,76,0.25);
 }
-.meta-copy {
-  font-size: 12px;
-  font-weight: 500;            /* slightly bolder than before */
-  color: var(--ink-soft);      /* #4a4a44 */
+
+/* ── Alert boxes ─────────────────────────────────────────────────────────── */
+.alert-gold {
+  padding: 14px 18px;
+  background: var(--gold-pale);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--ink-soft);
   line-height: 1.6;
 }
 
-/* ── Layout helpers ──────────────────────────────────────────── */
-.page-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.page-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-.page-grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
-.stack { display: flex; flex-direction: column; }
+.alert-red {
+  padding: 14px 18px;
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-left: 3px solid #dc2626;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: #9f1239;
+}
 
-/* ── Divider ─────────────────────────────────────────────────── */
-.divider      { border: none; border-top: 1px solid var(--border); }
-.divider-gold { border: none; border-top: 1px solid var(--gold-light); }
+/* ── Dividers ────────────────────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--border);
+}
 
-/* ── Page animation ──────────────────────────────────────────── */
-.page-enter { animation: rise 0.45s cubic-bezier(0.22,1,0.36,1) both; }
-@keyframes rise {
-  from { opacity: 0; transform: translateY(20px); }
+/* ── Progress bar ────────────────────────────────────────────────────────── */
+.progress-track {
+  height: 6px;
+  background: var(--sage-pale);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--forest), var(--sage));
+  border-radius: 3px;
+}
+
+/* ── Timeline ────────────────────────────────────────────────────────────── */
+.timeline-line {
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 1.5px;
+  background: var(--border);
+  z-index: 0;
+}
+
+/* ── Data table ──────────────────────────────────────────────────────────── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-family: var(--font-body);
+}
+
+.data-table th {
+  padding: 10px 16px;
+  background: var(--cream);
+  color: var(--ink-faint);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 12px 16px;
+  color: var(--ink-mid);
+  border-bottom: 1px solid rgba(228,224,216,0.6);
+  font-size: 13px;
+}
+
+.data-table tbody tr {
+  transition: background 0.15s;
+}
+
+.data-table tbody tr:hover {
+  background: var(--sage-pale);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Page grid helpers ───────────────────────────────────────────────────── */
+.page-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* ── Page enter animation ────────────────────────────────────────────────── */
+.page-enter {
+  animation: pageEnter 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Sidebar nav ─────────────────────────────────────────────── */
-.nav-link {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 16px; border-radius: 3px;
+/* ── Daily Wellness Card ─────────────────────────────────────────────────── */
+/*
+  TASK 1 FIX: Fully responsive Daily Wellness card.
+  Water glasses grid and sleep slider scale cleanly from 320px → desktop.
+*/
+.wellness-card {
+  padding: var(--space-6);
+  border-top: 4px solid var(--sage);
+}
+
+.wellness-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.wellness-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.wellness-label .wellness-value {
+  font-size: 12px;
+  color: var(--forest);
+  font-weight: 700;
+  margin-left: auto;
+}
+
+/* Water glasses grid — 8 glasses always in a single row on desktop,
+   wraps gracefully on mobile */
+.water-glasses-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.water-glass-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.18s;
+  -webkit-tap-highlight-color: transparent;
+  /* Accessible touch target */
+  min-width: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.water-glass-btn:hover {
+  background: var(--sage-pale);
+  transform: scale(1.1);
+}
+
+.water-glass-btn:active {
+  transform: scale(0.95);
+}
+
+.water-glass-btn .glass-icon {
+  font-size: 22px;
+  line-height: 1;
+  transition: all 0.18s;
+}
+
+.water-glass-btn.filled .glass-icon {
+  opacity: 1;
+  filter: none;
+}
+
+.water-glass-btn.empty .glass-icon {
+  opacity: 0.2;
+  filter: grayscale(100%);
+}
+
+/* Sleep range slider */
+.sleep-slider-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sleep-slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  accent-color: var(--forest);
+  cursor: pointer;
+  /* Touch target on mobile */
+  padding: 8px 0;
+  margin: -8px 0;
+}
+
+.sleep-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
+.sleep-ticks span {
+  font-size: 10px;
+  color: var(--ink-faint);
+  font-weight: 600;
+}
+
+/* ── Responsive Grid System ──────────────────────────────────────────────── */
+
+/* Tablet breakpoint (481px – 768px) */
+@media (max-width: 768px) {
+  .page-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+}
+
+/* Mobile breakpoint (≤ 480px) */
+@media (max-width: 480px) {
+  .page-grid-4 {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .card {
+    border-radius: var(--radius-md);
+  }
+
+  .btn {
+    padding: 10px 18px;
+    font-size: 11px;
+  }
+
+  /* Make tables horizontally scrollable on very small screens */
+  .data-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 8px 10px;
+    font-size: 11.5px;
+  }
+}
+
+/* ── Dashboard page responsive ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Two-column stats → 2x2 grid */
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Main content columns → single column */
+  .dashboard-main-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Page header */
+  .page-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .page-header h1 {
+    font-size: 32px !important;
+  }
+
+  /* Cycle tracking two-column layout */
+  .cycle-overview-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header h1 {
+    font-size: 28px !important;
+  }
+
+  .stat-value {
+    font-size: 28px !important;
+  }
+}
+
+/* ── Diet page responsive ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Meal cards grid → single column */
+  .meals-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Nutrients + tips → stack vertically */
+  .nutrients-tips-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Phase tab buttons — scrollable row */
+  .phase-tabs {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    flex-wrap: nowrap !important;
+    padding-bottom: 4px;
+  }
+
+  .phase-tab-btn {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+}
+
+/* ── Pregnancy page responsive ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .pregnancy-main-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .baby-mom-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pregnancy-header-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+}
+
+/* ── Admin dashboard responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .admin-charts-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ── Form grid responsive ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Log period form: 4 columns → 2 columns */
+  .form-grid-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-grid-4 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Pose grid responsive ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .pose-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .pose-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Quick access cards responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  .quick-access-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+}
+
+/* ── Cycle phase tabs → horizontal scroll on mobile ───────────────────── */
+@media (max-width: 600px) {
+  .cycle-phase-tabs {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    flex-wrap: nowrap !important;
+    padding-bottom: 2px !important;
+  }
+
+  .cycle-phase-tab {
+    flex-shrink: 0 !important;
+  }
+}
+
+/* ── SOS panel responsive ────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .sos-contact-card {
+    padding: 12px !important;
+    gap: 10px !important;
+  }
+
+  .sos-contact-number {
+    font-size: 15px !important;
+  }
+}
+
+/* ── Chatbot panel responsive ─────────────────────────────────────────────── */
+/* Ensure chat panel sits above bottom nav on mobile */
+@media (max-width: 768px) {
+  /* Move chat button above bottom nav */
+  [data-chatbot-trigger] {
+    bottom: 80px !important;
+  }
+
+  [data-chatbot-panel] {
+    bottom: 80px !important;
+    max-height: calc(100vh - 180px) !important;
+  }
+}
+
+/* ── Micro-interactions & hover effects ─────────────────────────────────── */
+
+/* Smooth card hover lift */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Link underline animation */
+.link-animate {
   text-decoration: none;
-  font-family: 'Jost', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.55);  /* was 0.42 — more visible inactive links */
-  transition: all 0.16s ease;
-  border-left: 2px solid transparent;
-}
-.nav-link:hover {
-  color: rgba(255,255,255,0.88); /* was 0.78 */
-  background: rgba(255,255,255,0.06);
-}
-.nav-link.active {
-  color: var(--gold-light);
-  background: rgba(201,168,76,0.14);
-  border-left-color: var(--gold);
-  font-weight: 600;               /* was 500 — active link stands out */
+  background-image: linear-gradient(var(--forest), var(--forest));
+  background-size: 0 1px;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  transition: background-size 0.25s ease;
 }
 
-/* ── Scrollbar ───────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: var(--cream); }
-::-webkit-scrollbar-thumb { background: var(--sage-light); border-radius: 10px; }
-
-/* ── Table ───────────────────────────────────────────────────── */
-.data-table { width: 100%; border-collapse: collapse; }
-.data-table th {
-  text-align: left; padding: 10px 16px;
-  font-size: 11px; font-weight: 700;  /* was 600 */
-  letter-spacing: 0.09em; text-transform: uppercase;
-  color: var(--ink-soft);             /* now #4a4a44 — was #7a7a72 */
-  border-bottom: 1.5px solid var(--border); /* was 1px — more defined */
-  background: var(--cream);           /* subtle header bg for separation */
-}
-.data-table td {
-  padding: 13px 16px;
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--ink-mid);              /* now #2c2c28 — was #4a4a46 */
-  border-bottom: 1px solid var(--border);
-  line-height: 1.5;
-}
-.data-table tr:last-child td { border-bottom: none; }
-.data-table tr:hover td { background: var(--sage-pale); }
-
-/* First column emphasis */
-.data-table td:first-child {
-  font-weight: 500;
-  color: var(--ink);
+.link-animate:hover {
+  background-size: 100% 1px;
 }
 
-/* ── Progress bar ────────────────────────────────────────────── */
-.progress-track {
-  height: 6px; background: var(--sage-pale);
-  border-radius: 100px; overflow: hidden;
-}
-.progress-fill {
-  height: 100%; border-radius: 100px;
-  background: linear-gradient(90deg, var(--forest), var(--sage));
-  transition: width 1.2s cubic-bezier(0.22,1,0.36,1);
+/* ── Scrollbar styling ───────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-/* ── Alert / Banner ──────────────────────────────────────────── */
-.alert-gold {
-  background: var(--gold-pale);
-  border: 1px solid #d4b060;     /* was --gold-light — slightly darker border */
-  border-radius: 3px;
-  padding: 14px 18px;
-  font-size: 13.5px;             /* was 13px */
-  font-weight: 500;              /* was implicit 400 */
-  color: #5a3e08;                /* was #6a4e14 — darker, higher contrast */
-  line-height: 1.65;
-}
-.alert-red {
-  background: #fef2f2;
-  border: 1px solid #fca5a5;
-  border-radius: 3px; padding: 14px 18px;
-  font-size: 13.5px; font-weight: 500;
-  color: #7f1d1d;                /* was #991b1b — even darker */
-  line-height: 1.65;
-}
-.alert-green {
-  background: #f0fdf4;
-  border: 1px solid #86efac;    /* was #bbf7d0 — more visible */
-  border-radius: 3px; padding: 14px 18px;
-  font-size: 13.5px; font-weight: 500;
-  color: #14532d;
-  line-height: 1.65;
+::-webkit-scrollbar-track {
+  background: var(--cream);
 }
 
-/* ── Milestone / Timeline ────────────────────────────────────── */
-.timeline-line {
-  position: absolute; left: 15px; top: 0; bottom: 0;
-  width: 1px; background: var(--border);
-}
-
-/* ── Stat value display ──────────────────────────────────────── */
-/* Applied to the large number in stat cards */
-.stat-value {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(28px, 3.5vw, 40px);
-  font-weight: 600;
-  color: var(--ink);
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-.stat-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-soft);    /* #4a4a44 */
-}
-.stat-sub {
-  font-size: 12.5px;
-  color: var(--ink-soft);
-  font-weight: 400;
-  line-height: 1.5;
-  margin-top: 4px;
-}
-
-/* ── Section sub-text ────────────────────────────────────────── */
-/* For the key:value rows inside cards */
-.detail-key {
-  font-size: 12.5px;
-  font-weight: 600;          /* was implicit 500 */
-  color: var(--ink-soft);    /* #4a4a44 */
-  letter-spacing: 0.03em;
-  text-transform: none;
-}
-.detail-value {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--ink);         /* #111110 */
-  text-align: right;
-}
-
-/* ── Phase indicator strip ───────────────────────────────────── */
-/* Used in Dashboard header — ensure text is legible on tinted bg */
-.phase-strip {
-  padding: 14px 22px;
+::-webkit-scrollbar-thumb {
+  background: var(--border);
   border-radius: 3px;
 }
-.phase-strip .phase-eyebrow {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 3px;
-}
-.phase-strip .phase-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 3px;
-}
-.phase-strip .phase-note {
-  font-size: 12.5px;
-  color: var(--ink-soft);    /* #4a4a44 */
-  max-width: 260px;
-  line-height: 1.55;
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-faint);
 }
 
-/* ── Empty state ─────────────────────────────────────────────── */
-.empty-state-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 10px;
-}
-.empty-state-text {
-  color: var(--ink-soft);    /* #4a4a44 — was much lighter */
-  font-size: 14.5px;
-  line-height: 1.75;
-  max-width: 420px;
-  margin: 0 auto 28px;
+/* ── Animations ──────────────────────────────────────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-/* ── Form note / hint text ───────────────────────────────────── */
-.field-hint {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--ink-soft);    /* #4a4a44 */
-  line-height: 1.5;
-  margin-top: 2px;
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-/* ── Top bar header text ─────────────────────────────────────── */
-/* The "Secure & Private" strip at the top of each page */
-.topbar-label {
-  font-size: 11px;
-  font-weight: 700;          /* was 600 */
-  color: var(--ink-soft);    /* #4a4a44 — was near-invisible */
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+@keyframes pulse_soft {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
 }
 
-/* ── Footer text ─────────────────────────────────────────────── */
-footer span {
-  color: var(--ink-faint);   /* #7a7a72 — was #c4c4bc (near invisible) */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
 }
 
-/* ── Accessibility: Focus visible ────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--forest);
-  outline-offset: 3px;
-  border-radius: 2px;
+/* ── Utility classes ─────────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
-/* ── Responsive ──────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .page-grid-4 { grid-template-columns: repeat(2,1fr); }
-  .page-grid-3 { grid-template-columns: repeat(2,1fr); }
-  .page-grid-2 { grid-template-columns: 1fr; }
-}
-@media (max-width: 600px) {
-  .page-grid-4,
-  .page-grid-3,
-  .page-grid-2 { grid-template-columns: 1fr; }
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* ── Stat value display ──────────────────────────────────────── */
-/* Applied to the large number in stat cards */
-.stat-value {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(28px, 3.5vw, 40px);
-  font-weight: 600;
-  color: var(--ink);
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-.stat-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-soft);    /* #4a4a44 */
-}
-.stat-sub {
-  font-size: 12.5px;
-  color: var(--ink-soft);
-  font-weight: 400;
-  line-height: 1.5;
-  margin-top: 4px;
-}
+.text-right { text-align: right; }
+.text-center { text-align: center; }
 
-/* ── Section sub-text ────────────────────────────────────────── */
-/* For the key:value rows inside cards */
-.detail-key {
-  font-size: 12.5px;
-  font-weight: 600;          /* was implicit 500 */
-  color: var(--ink-soft);    /* #4a4a44 */
-  letter-spacing: 0.03em;
-  text-transform: none;
-}
-.detail-value {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--ink);         /* #111110 */
-  text-align: right;
-}
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.gap-4 { gap: 16px; }
+.flex-1 { flex: 1; }
+.flex-shrink-0 { flex-shrink: 0; }
 
-/* ── Phase indicator strip ───────────────────────────────────── */
-/* Used in Dashboard header — ensure text is legible on tinted bg */
-.phase-strip {
-  padding: 14px 22px;
-  border-radius: 3px;
-}
-.phase-strip .phase-eyebrow {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 3px;
-}
-.phase-strip .phase-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 3px;
-}
-.phase-strip .phase-note {
-  font-size: 12.5px;
-  color: var(--ink-soft);    /* #4a4a44 */
-  max-width: 260px;
-  line-height: 1.55;
-}
-
-/* ── Empty state ─────────────────────────────────────────────── */
-.empty-state-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 10px;
-}
-.empty-state-text {
-  color: var(--ink-soft);    /* #4a4a44 — was much lighter */
-  font-size: 14.5px;
-  line-height: 1.75;
-  max-width: 420px;
-  margin: 0 auto 28px;
-}
-
-/* ── Form note / hint text ───────────────────────────────────── */
-.field-hint {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--ink-soft);    /* #4a4a44 */
-  line-height: 1.5;
-  margin-top: 2px;
-}
-
-/* ── Top bar header text ─────────────────────────────────────── */
-/* The "Secure & Private" strip at the top of each page */
-.topbar-label {
-  font-size: 11px;
-  font-weight: 700;          /* was 600 */
-  color: var(--ink-soft);    /* #4a4a44 — was near-invisible */
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-/* ── Footer text ─────────────────────────────────────────────── */
-footer span {
-  color: var(--ink-faint);   /* #7a7a72 — was #c4c4bc (near invisible) */
-}
-
-/* ── Accessibility: Focus visible ────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--forest);
-  outline-offset: 3px;
-  border-radius: 2px;
-}
-
-/* ── Responsive ──────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .page-grid-4 { grid-template-columns: repeat(2,1fr); }
-  .page-grid-3 { grid-template-columns: repeat(2,1fr); }
-  .page-grid-2 { grid-template-columns: 1fr; }
-}
-@media (max-width: 600px) {
-  .page-grid-4,
-  .page-grid-3,
-  .page-grid-2 { grid-template-columns: 1fr; }
-}
+.w-full { width: 100%; }
+.mt-2 { margin-top: 8px; }
+.mt-4 { margin-top: 16px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-4 { margin-bottom: 16px; }
