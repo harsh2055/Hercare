@@ -1,4 +1,4 @@
-# 🌸 FemCare - Women's Health App
+# HerCare - Women's Health App
 
 A complete women's health companion with menstrual cycle tracking, pregnancy monitoring, diet & exercise plans, symptom logging, and smart reminders.
 
